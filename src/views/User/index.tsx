@@ -1,0 +1,12 @@
+import React from 'react'
+import './style.css'
+
+
+//          conponent: 유저 화면 컴포넌트          //
+export default function User() {
+
+//          render: 유저 화면 컴포넌트 랜더링          //
+  return (
+    <div>index</div>
+  )
+}
