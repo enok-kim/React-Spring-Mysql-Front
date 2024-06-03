@@ -1,11 +1,11 @@
-export default interface BoardListItem {
+export default interface BoardItem {
   boardNumber: number;
   title: string;
   content: string;
   boardTitleImage: string | null;
   favoriteCount: number;
   commentCount: number;
-  viewCountl: number;
+  viewCount: number;
   writeDatetime: string;
   writerNickname: string;
   writerProfileImage: string | null;
