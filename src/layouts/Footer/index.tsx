@@ -23,7 +23,7 @@ const onNaverIconButtonClickHandler = () => {
             <div className="icon-box">
               <div className="icon logo-light-icon"></div>
             </div>
-            <div className="footer-logo-text">{'Enok Board'}</div>
+            <div className="footer-logo-text">{'Enok&Kanako'}</div>
           </div>
           <div className="footer-link-box">
             <div className="footer-email-link">{'rladpshr2581@naver.com'}</div>
