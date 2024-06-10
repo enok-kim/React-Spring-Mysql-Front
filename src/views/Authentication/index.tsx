@@ -116,7 +116,7 @@ return (
         <div className="auth-card-title-box">
           <div className="auth-card-title">{'Login'}</div>
         </div>
-        <InputBox ref={emailRef} label='Adress' type='text' placeholer='メールアドレスを入力してください。'　error={error} value={email} onChange={onEmailChangeHandler} onKeyDown={onEmailKeyDownHandler} />
+        <InputBox ref={emailRef} label='Email' type='text' placeholer='メールアドレスを入力してください。'　error={error} value={email} onChange={onEmailChangeHandler} onKeyDown={onEmailKeyDownHandler} />
         <InputBox ref={passwordRef} label='Password' type={passwordType} placeholer='パスワードを入力してください。'　error={error} value={password} onChange={onPasswordChangeHandler} icon={passwordButtonIcon} onButtonClick={onPasswordButtonClickHandler} onKeyDown={onPasswordKeyDownHandler}/>
       </div>
       <div className="auth-card-bottom">
@@ -206,7 +206,7 @@ const onPasswordButtonClickHandler = () => {
 }//onPasswordButtonClickHandler
 //          event handler : password 확인 버튼 클릭 이벤트 처리 //
 const onPasswordCheckButtonClickHandler = () => {
-  if (passwordButtonIcon == 'eye-light-off-icon'){
+  if (passwordCheckButtonIcon == 'eye-light-off-icon'){
     setPasswordCheckButtonIcon('eye-light-on-icon');
     setPasswordCheckType('text');
   }else{
@@ -254,6 +254,10 @@ const onNextButtonClickHandler = () => {
   if(!isEmailPattern || !isCheckedPassword || !isEqualPassword) return;
   setPage(2);
 }//onNextButtonClickHandler
+//         event handler : 로그인 링크 클릭 이벤트 처리     //
+const onSignInLinkClickHandler = () => {
+  setView('sign-in');
+}
 
 
 //          render : sign up card 컴포넌트 렌더링 //
@@ -265,13 +269,18 @@ const onNextButtonClickHandler = () => {
             <div className="auth-card-title">{'SignUp'}</div>
             <div className="auth-card-page">{`${page}/2`}</div>
           </div>
-          <InputBox ref={emailRef} label='Address *' type='text' placeholer='メールアドレスを入力してください。' value='email' onChange={onEmailChangeHandler} error={isEmailError} message={emailErrorMessage} icon={passwordButtonIcon} onKeyDown={onEmailKeyDownHandler}/>
-          <InputBox ref={passwordRef} label='PassWord *' type={passwordType}　placeholer='パスワードを入力してください。' value='password' onChange={onPasswordChangeHandler} error={isPasswordError} message={passwordErrorMessage} onButtonClick={onPasswordButtonClickHandler} onKeyDown={onPasswordKeyDownHandler}/>
-          <InputBox ref={passwordCheckRef} label='PassWordCheck *' type={passwordCheckType}　placeholer='パスワードをもう一度入力ください。' value='passwordCheck' onChange={onPasswordCheckChangeHandler} error={isPasswordCheckError} message={passwordCheckrrorMessage} icon={passwordCheckButtonIcon} onButtonClick={onPasswordCheckButtonClickHandler} onKeyDown={onPasswordCheckButtonClickHandler}/>
+          <InputBox ref={emailRef} label='Address *' type='text' placeholer='メールアドレスを入力してください。' value={email} onChange={onEmailChangeHandler} error={isEmailError} message={emailErrorMessage}  onKeyDown={onEmailKeyDownHandler}/>
+          <InputBox ref={passwordRef} label='Password *' type={passwordType}　placeholer='パスワードを入力してください。' value={password} onChange={onPasswordChangeHandler} error={isPasswordError} message={passwordErrorMessage} icon={passwordButtonIcon} onButtonClick={onPasswordButtonClickHandler} onKeyDown={onPasswordKeyDownHandler}/>
+          <InputBox ref={passwordCheckRef} label='Password Check *' type={passwordCheckType}　placeholer='パスワードをもう一度入力ください。' value={passwordCheck} onChange={onPasswordCheckChangeHandler} error={isPasswordCheckError} message={passwordCheckrrorMessage} icon={passwordCheckButtonIcon} onButtonClick={onPasswordCheckButtonClickHandler} onKeyDown={onPasswordCheckKeyDownHandler}/>
         </div>
         <div className="auth-card-bottom">
           <div className="black-large-full-button" onClick={onNextButtonClickHandler}>{'Next'}</div>
-          <div className="auth-description-box">{'登録済みですか？'}</div><span className='auth-description'>{'SignIn'}</span>
+          <div className="auth-description-box">
+            <div className="auth-description">
+            {'登録済みですか？'}
+            <span className="auth-description-link" onClick={onSignInLinkClickHandler}>{'SignIn'}</span>
+            </div>
+            </div>
         </div>
       </div>
     </div>
