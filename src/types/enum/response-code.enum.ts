@@ -17,7 +17,7 @@
      NO_PERMISSION = "NP",
   
     //HTTP Status 500
-     DATABASE_ERROR = "DE",
+     DATABASE_ERROR = "DBE",
 
  }
  export default ResponseCode;
