@@ -2,9 +2,9 @@ import React, { useState, KeyboardEvent, useRef, ChangeEvent, Key } from 'react'
 import './style.css'
 import { idText } from 'typescript'
 import InputBox from 'components/InputBox';
-import { SignInRequestDto } from 'apis/request/auth';
-import { signInRequest } from 'apis';
-import { SignInResponseDto } from 'apis/response/auth';
+import { SignInRequestDto, SignUpRequestDto } from 'apis/request/auth';
+import { signInRequest, signUpRequest } from 'apis';
+import { SignInResponseDto, SignUpReponseDto } from 'apis/response/auth';
 import { ResponseDto } from 'apis/response';
 import { useCookies } from 'react-cookie';
 import { MAIN_PATH } from 'constant';
@@ -13,7 +13,6 @@ import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
 
 //          component : 인증 화면 컴포넌트          //
 export default function Authentication() {
-
 //          state : 화면 상태                  　　//
 const [view, setView] = useState< 'sign-in' | 'sign-up' >('sign-in');    
 //         state :   쿠키 상태           　　　　　　//
@@ -211,6 +210,34 @@ const [addressDetail, setAddressDetail] = useState<string>('');
 //          function : 다음 주소 검색 팝업 오픈 함수             //
 const open = useDaumPostcodePopup();
 
+const signUpResponse = (responseBody: SignUpReponseDto | ResponseDto | null) => {
+  if (!responseBody){
+    alert('ネットワークのエラーです。');
+    return;
+  }
+  const { code } = responseBody;
+  if (code === 'DE' ){
+    setEmailError(true);
+    setEmailErrorMessage('すでに存在しているメールアドレスです。');
+  }//if DE
+  if (code === 'DN' ){
+    setNicknameError(true);
+    setNicknameErrorMessage('すでに存在しているニックネームです。');
+  }//if DN
+  if (code === 'DT' ){
+    setTelNumberError(true);
+    setTelNumberErrorMessage('すでに存在している携帯番号です。');
+  }//if DT
+  if (code === 'VF' ){
+    alert('すべての値を入力してください。');
+  }//if VF
+  if (code === 'DBE') alert('データベースのエラーです。');
+
+  if(code === 'SU') return;
+
+  setView('sign-in');
+}
+
 //          event handler : 이메일 변경 이벤트 처리 //
 const onEmailChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
   const {value} = event.target;
@@ -354,7 +381,51 @@ const onSignInLinkClickHandler = () => {
 }//onSignInLinkClickHandler
 //         event handler : 회원가입 버튼 클릭 이벤트 처리    //
 const onSignUpButtonClickHandler = () => {
-  alert('会員登録ボタン！');
+  const emailPattern = /^[a-zA-Z0-9]*@([-.]?[a-zA-Z0-9])*.[a-zA-Z]{2,4}$/;
+  const isEmailPattern = emailPattern.test(email);
+  if(!isEmailPattern){
+    setEmailError(true);
+    setEmailErrorMessage('メールを入力してください。');
+  }//if
+  const isCheckedPassword = password.trim().length > 8
+  if(!isCheckedPassword){
+    setPasswordError(true);
+    setPassWordErrorMessage('パスワードは８字以上入力してください。');
+  }//if
+  const isEqualPassword = password === passwordCheck;
+  if(!isEqualPassword){
+    setPasswordCheckError(true);
+    setPasswordCheckErrorMessage('パスワードが一致していません。');
+  }//if
+  if (!isEmailPattern || !isCheckedPassword || !isEqualPassword) {
+  setPage(1);
+  return;
+  }
+  const hasNickname = nickname.trim().length !== 0;
+  if (!hasNickname) {
+    setNicknameError(true);
+    setNicknameErrorMessage('ニックネームを入力してください。');
+  }//if
+  const telNumberPattern = /^[0-9]{11,13}$^/;
+  const isTelNumberPattern = telNumberPattern.test(telNumber);
+  if (!isTelNumberPattern){
+    setTelNumberError(true);
+    setTelNumberErrorMessage('数字のみ入力してください。');
+  }//if
+  const hasAddress = address.trim().length > 0;
+  if (!hasAddress){
+    setAddressError(true);
+    setAddressErrorMessage('住所を選んでください。');
+  }//if
+  if(!agreedPersonal) setAgreedPersonalError(true);
+
+  if(!hasNickname || !isTelNumberPattern || agreedPersonal) return;
+
+  const requestBody: SignUpRequestDto = {
+    email, password, nickname, telNumber, address, addressDetail, agreedPersonal
+  };
+
+  signUpRequest(requestBody).then(signUpResponse);
 
 }//onSignUpButtonClickHandler
 //         event handler : 개인정보 동의 체크 박스 클릭 이벤트 처리    //
