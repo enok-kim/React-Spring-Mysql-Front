@@ -147,3 +147,32 @@ background-size: 100%;
   color: rgba(0, 0, 0, 1);
   cursor: pointer;
 }
+.auth-consent-box{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.auth-check-box{
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+}
+.auth-consent-title{
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 140%;
+}
+.auth-consent-title-error{
+  color: rgba(255, 0, 0, 1);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 140%;
+}
+.auth-consent-link{
+  color: rgba(0, 0, 0, 1);
+
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 140%;
+}

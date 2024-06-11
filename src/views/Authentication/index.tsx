@@ -9,16 +9,15 @@ import { ResponseDto } from 'apis/response';
 import { useCookies } from 'react-cookie';
 import { MAIN_PATH } from 'constant';
 import { useNavigate } from 'react-router-dom';
-import { keyboardKey } from '@testing-library/user-event';
+import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
+
 //          component : 인증 화면 컴포넌트          //
 export default function Authentication() {
 
 //          state : 화면 상태                  　　//
 const [view, setView] = useState< 'sign-in' | 'sign-up' >('sign-in');    
-  
 //         state :   쿠키 상태           　　　　　　//
 const [cookies, setCookie] = useCookies();
-
 //          function : 네비게이터        　　　　　　　//
 const navigator = useNavigate();
 //          component : sign in card 컴포넌트     //
@@ -141,51 +140,54 @@ return (
 };
 //          component : sign up card 컴포넌트     //
 const SignUpCard = () => {
-
-
-//          state : 이메일 요소 참조 상태            //
-const emailRef = useRef<HTMLInputElement | null>(null);  
-//          state : 패스워드 요소 참조 상태           //
-const passwordRef = useRef<HTMLInputElement | null>(null);  
-//          state : 패스워드 확인 요소 참조 상태       //
-const passwordCheckRef = useRef<HTMLInputElement | null>(null);
-//          state : 닉네임 요소 참조 상태       //
-const nicknameRef = useRef<HTMLInputElement | null>(null);
-//          state : 휴대 전화번호 요소 참조 상태       //
-const telNumberRef = useRef<HTMLInputElement | null>(null);
-//          state : 주소 요소 참조 상태       //
-const addressRef = useRef<HTMLInputElement | null>(null);
-//          state : 주소 상세 요소 참조 상태       //
-const addressDetailRef = useRef<HTMLInputElement | null>(null);
-//          state : 패스워드 타입 상태             　//
-const [passwordType, setPasswordType] = useState<'text' | 'password'>('password');
-//          state : 패스워드 check 타입 상태        //
-const [passwordCheckType, setPasswordCheckType] = useState<'text' | 'password'>('password');
-//          state : 페이지 번호 상태               //
-const [page, setPage] = useState<1|2>(2);
-//          state : 회원가입 이메일 상태            //
-const [email, setEmail] = useState<string>('');
-//          state : 회원가입 Password 상태        //
-const [password, setPassword] = useState<string>('');
-//          state : 회원가입 Password Check 상태  //
-const [passwordCheck, setPasswordCheck] = useState<string>('');
-//          state : email error 상태            //
-const [isEmailError, setEmailError] = useState<boolean> (false);
-//          state : password error 상태         //
-const [isPasswordError, setPasswordError] = useState<boolean> (false);
-//          state : password check error 상태   //
-const [isPasswordCheckError, setPasswordCheckError] = useState<boolean> (false);
-//          state : nickname error 상태    //
-const [isNickNameError, setNicknameError] = useState<boolean>(false);
-//          state : telNumber error 상태    //
-const [isTelNumberError, setTelNumberError] = useState<boolean>(false);
-//          state : address error 상태    //
-const [isAddressError, setAddressError] = useState<boolean>(false);
-//          state : email error 메세지 상태       //
-const [emailErrorMessage, setEmailErrorMessage] = useState<string>('');
-//          state : password error 메세지 상태    //
-const [passwordErrorMessage, setPassWordErrorMessage] = useState<string>('');
-//          state : password check error 메세지 상태 //
+  
+  //          state : 개인 정보 동의 상태       //
+  const [agreedPersonal, setAgreedPersonal] = useState<boolean>(false);
+  //          state : 이메일 요소 참조 상태            //
+  const emailRef = useRef<HTMLInputElement | null>(null);  
+  //          state : 패스워드 요소 참조 상태           //
+  const passwordRef = useRef<HTMLInputElement | null>(null);  
+  //          state : 패스워드 확인 요소 참조 상태       //
+  const passwordCheckRef = useRef<HTMLInputElement | null>(null);
+  //          state : 닉네임 요소 참조 상태       //
+  const nicknameRef = useRef<HTMLInputElement | null>(null);
+  //          state : 휴대 전화번호 요소 참조 상태 //
+  const telNumberRef = useRef<HTMLInputElement | null>(null);
+  //          state : 주소 요소 참조 상태       //
+  const addressRef = useRef<HTMLInputElement | null>(null);
+  //          state : 주소 상세 요소 참조 상태   //
+  const addressDetailRef = useRef<HTMLInputElement | null>(null);
+  //          state : 패스워드 타입 상태             　//
+  const [passwordType, setPasswordType] = useState<'text' | 'password'>('password');
+  //          state : 패스워드 check 타입 상태        //
+  const [passwordCheckType, setPasswordCheckType] = useState<'text' | 'password'>('password');
+  //          state : 페이지 번호 상태               //
+  const [page, setPage] = useState<1|2>(2);
+  //          state : 회원가입 이메일 상태            //
+  const [email, setEmail] = useState<string>('');
+  //          state : 회원가입 Password 상태        //
+  const [password, setPassword] = useState<string>('');
+  //          state : 회원가입 Password Check 상태  //
+  const [passwordCheck, setPasswordCheck] = useState<string>('');
+  //          state : email error 상태            //
+  const [isEmailError, setEmailError] = useState<boolean> (false);
+  //          state : password error 상태         //
+  const [isPasswordError, setPasswordError] = useState<boolean> (false);
+  //          state : password check error 상태   //
+  const [isPasswordCheckError, setPasswordCheckError] = useState<boolean> (false);
+  //          state : nickname error 상태    //
+  const [isNickNameError, setNicknameError] = useState<boolean>(false);
+  //          state : telNumber error 상태    //
+  const [isTelNumberError, setTelNumberError] = useState<boolean>(false);
+  //          state : address error 상태    //
+  const [isAddressError, setAddressError] = useState<boolean>(false);
+  //          state : 개인 정보 동의 error 상태 //
+  const [isAgreedPersonalError, setAgreedPersonalError] = useState<boolean>(false);
+  //          state : email error 메세지 상태       //
+  const [emailErrorMessage, setEmailErrorMessage] = useState<string>('');
+  //          state : password error 메세지 상태    //
+  const [passwordErrorMessage, setPassWordErrorMessage] = useState<string>('');
+  //          state : password check error 메세지 상태 //
 const [passwordCheckErrorMessage, setPasswordCheckErrorMessage] = useState<string>('');
 //          state : nick name error 메세지 상태 //
 const [nicknameErrorMessage, setNicknameErrorMessage] = useState<string>('');
@@ -206,35 +208,50 @@ const [address, setAddress] = useState<string>('');
 //          state : 상세 주소 상태             //
 const [addressDetail, setAddressDetail] = useState<string>('');
 
+//          function : 다음 주소 검색 팝업 오픈 함수             //
+const open = useDaumPostcodePopup();
+
 //          event handler : 이메일 변경 이벤트 처리 //
 const onEmailChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
   const {value} = event.target;
   setEmail(value);
+  setEmailError(false);
+  setEmailErrorMessage('');
 }//onEmailChangeHandler
 //          event handler : 비밀번호 변경 이벤트 처리 //
 const onPasswordChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
   const {value} = event.target;
   setPassword(value);
+  setPasswordError(false);
+  setPassWordErrorMessage('');
 }//onPasswordChangeHandler
 //          event handler : 비밀번호 체크 변경 이벤트 처리 //
 const onPasswordCheckChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
   const {value} = event.target;
   setPasswordCheck(value);
+  setPasswordCheckError(false);
+  setPasswordCheckErrorMessage('');
 }//onPasswordCheckChangeHandler
 //          event handler : 닉네임 변경 이벤트 처리      //
 const onNicknameChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
   const {value} = event.target;
   setNickname(value);
+  setNicknameError(false);
+  setNicknameErrorMessage('');
 }//onNicknameChangeHandler
 //          event handler : 핸드폰 번호 변경 이벤트 처리  //
 const onTelNumberChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
   const {value} = event.target;
   setTelNumber(value);
+  setTelNumberError(false);
+  setTelNumberErrorMessage('');
 }//onTelNumberChangeHandler
 //          event handler : 주소 변경 이벤트 처리       //
 const onAddressChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
   const {value} = event.target;
   setAddress(value);
+  setAddressError(false);
+  setAddressErrorMessage('');
 }//onAddressChangeHandler
 //          event handler : 상세 주소 변경 이벤트 처리   //
 const onAddressDetailChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -262,10 +279,12 @@ const onPasswordCheckButtonClickHandler = () => {
     setPasswordCheckType('password');
   }//else
 }//onPasswordButtonClickHandler
+
 //          event handler : address 버튼 클릭 이벤트 처리 //
 const onAddressButtonClickHandler = () => {
-
+  open({ onComplete });
 }//onAddressButtonClickHandler
+
 //           event handler : 이메일 키 다운 이벤트 처리       //
 const onEmailKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) =>{
   if (event.key !== 'Enter') return;
@@ -282,23 +301,31 @@ const onPasswordKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
 const onPasswordCheckKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
   if (event.key !== 'Enter') return;
   if (!  passwordRef) return;
+  if(!nicknameRef.current) return;
   onNextButtonClickHandler();
+  nicknameRef.current.focus();
 }//onPasswordCheckKeyDownHandler
 //           event handler : nickname 키 다운 이벤트 처리       //
 const onNicknameKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
   if(event.key !== 'Enter') return;
+  if(!telNumberRef.current) return;
+  telNumberRef.current.focus();
 }//onNicknameKeyDownHandler
 //           event handler : telNumber 키 다운 이벤트 처리       //
 const onTelNumberKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
   if(event.key !== 'Enter') return;
+  onAddressButtonClickHandler();
 }//onTelNumberKeyDownHandler
 //           event handler : address 키 다운 이벤트 처리       //
 const onAddressKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-  if(event.key !== 'Enter') return;
+  if (event.key !== 'Enter') return;
+  if (!addressDetailRef.current) return;
+  addressDetailRef.current.focus();
 }//onAddressKeyDownHandler
 //           event handler : addressDetail 키 다운 이벤트 처리       //
 const onAddressDetailKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
   if(event.key !== 'Enter') return;
+  onSignUpButtonClickHandler();
 }//onAddressDetailKeyDownHandler
 //          event handler : 다음 단계 버튼 클릭 이벤트 처리       //
 const onNextButtonClickHandler = () => {
@@ -327,8 +354,22 @@ const onSignInLinkClickHandler = () => {
 }//onSignInLinkClickHandler
 //         event handler : 회원가입 버튼 클릭 이벤트 처리    //
 const onSignUpButtonClickHandler = () => {
+  alert('会員登録ボタン！');
 
-}
+}//onSignUpButtonClickHandler
+//         event handler : 개인정보 동의 체크 박스 클릭 이벤트 처리    //
+const onAgreedPersonalClickHandler = () => {
+  setAgreedPersonal(!agreedPersonal);
+  setAgreedPersonalError(false);
+}//onConsentClickHandler
+
+//         event handler : 다음 주소 검색 완료 이벤트 처리      //
+const onComplete = (data: Address) => { //react-daum-postcode의 Address
+  const { address } = data;
+  setAddress(address);
+  if (!addressDetailRef.current) return;
+  addressDetailRef.current.focus();
+}//onComplete
 
 
 //          render : sign up card 컴포넌트 렌더링 //
@@ -363,11 +404,11 @@ const onSignUpButtonClickHandler = () => {
           {page === 2 && (
             <>
               <div className="auth-consent-box">
-                <div className="auth-check-box">
-                  <div className="check-ring-light-icon"></div>
+                <div className="auth-check-box" onClick={onAgreedPersonalClickHandler}>
+                  <div className={`icon ${agreedPersonal ? 'check-round-fill-icon' : 'check-ring-light-icon'}`}></div>
                 </div>
-                <div className="auth-consent-title">{'個人情報同義'}</div>
-                <div className="auth-consent-link">{'<　more　>'}</div>
+                <div className={isAgreedPersonalError ? "auth-consent-title-error" : "auth-consent-title"}>{'個人情報同義'}</div>
+                <div className="auth-consent-link">{'more　>'}</div>
               </div>
               <div className="black-large-full-button" onClick={onSignUpButtonClickHandler}>{'SignUp!'}</div> 
             </>
