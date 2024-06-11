@@ -25,7 +25,7 @@ const InputBox = forwardRef<HTMLInputElement, Props>((props: Props, ref) => {
 
 
 //             state : properties             //
-const {label, type, value, placeholer,　error,icon,message} = props;
+const {label, type, value, placeholer,　error, icon, message} = props;
 const {onChange, onButtonClick, onKeyDown} = props;
 
 

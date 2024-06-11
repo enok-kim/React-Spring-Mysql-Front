@@ -14,7 +14,7 @@ export default function FavoriteItem({favoriteListItem}: Props) {
 //          Properties          //
   const {profileImage, nickname} = favoriteListItem;
 
-//          render: Favorite List Item 랜더링          //  
+//          render : Favorite List Item 랜더링          //  
   return (
     <div>
       <div className='favorite-list-item'>
